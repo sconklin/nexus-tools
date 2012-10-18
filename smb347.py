@@ -1,0 +1,209 @@
+#!/usr/bin/env python
+#
+#
+
+class SMB347:
+
+    # constants for smb349
+    smb347_regs = {
+    0x00:'CHARGE',
+    0x01:'CHRG_CRNTS',
+    0x02:'VRS_FUNC',
+    0x03:'FLOAT_VLTG',
+    0x04:'CHRG_CTRL',
+    0x05:'STAT_TIME_CTRL',
+    0x06:'PIN_CTRL',
+    0x07:'THERM_CTRL',
+    0x08:'SYSOK_USB3',
+    0x09:'CTRL_REG',
+    0x0A:'OTG_TLIM_REG',
+    0x0B:'HRD_SFT_TEMP',
+    0x0C:'FAULT_INTR',
+    0x0D:'STS_INTR_1',
+    0x0E:'I2C_ADDR',
+    0x10:'IN_CLTG_DET',
+    0x11:'STS_INTR_2',
+    # Command registers
+    0x30:'CMD_REG',
+    0x31:'CMD_REG_B',
+    0x33:'CMD_REG_C',
+    # Interrupt Status registers
+    0x35:'INTR_STS_A',
+    0x36:'INTR_STS_B',
+    0x37:'INTR_STS_C',
+    0x38:'INTR_STS_D',
+    0x39:'INTR_STS_E',
+    0x3A:'INTR_STS_F',
+    # Status registers
+    0x3B:'STS_REG_A',
+    0x3C:'STS_REG_B',
+    0x3D:'STS_REG_C',
+    0x3E:'STS_REG_D',
+    0x3F:'STS_REG_E',
+}
+
+#'ENABLE_WRITE	1
+#'DISABLE_WRITE	0
+#ENABLE_WRT_ACCESS	0x80
+#'ENABLE_APSD		0x04
+#'HC_MODE		0x01
+#'USB_5_9_CUR		0x02
+#'PIN_CTRL		0x10
+#'THERM_CTRL		0x10
+#'BATTERY_MISSING		0x10
+#'CHARGING		0x06
+#'DEDICATED_CHARGER	0x02
+#'CHRG_DOWNSTRM_PORT	0x04
+#'ENABLE_CHARGE		0x02
+#'ENABLE_CHARGER		1
+#'DISABLE_CHARGER		0
+#'USBIN		0x80
+#'APSD_OK		0x08
+#'APSD_RESULT		0x07
+#'APSD_CDP		0x01
+#'APSD_DCP		0x02
+#'APSD_OTHER		0x03
+#'APSD_SDP		0x04
+#'USB_30		0x20
+
+# ================================================
+
+    in_reg_transaction = False
+    temp_register = None
+    regname = None
+
+    def dump_generic(self, data):
+        if data & 0x80:
+            print "[0x80 = 1]",
+        else:
+            print "[0x80 = 0]",
+        if data & 0x40:
+            print "[0x40 = 1]",
+        else:
+            print "[0x40 = 0]",
+        if data & 0x20:
+            print "[0x20 = 1]",
+        else:
+            print "[0x20 = 0]",
+        if data & 0x10:
+            print "[0x10 = 1]",
+        else:
+            print "[0x10 = 0]",
+        if data & 0x08:
+            print "[0x08 = 1]",
+        else:
+            print "[0x08 = 0]",
+        if data & 0x04:
+            print "[0x04 = 1]",
+        else:
+            print "[0x04 = 0]",
+        if data & 0x02:
+            print "[0x02 = 1]",
+        else:
+            print "[0x02 = 0]",
+        if data & 0x01:
+            print "[0x01 = 1]",
+        else:
+            print "[0x01 = 0]",
+        print
+        return
+
+    def dump_usb3(self, data):
+        if data & 0x80:
+            print "[0x80 = 1]",
+        else:
+            print "[0x80 = 0]",
+        if data & 0x40:
+            print "[0x40 = 1]",
+        else:
+            print "[0x40 = 0]",
+        if data & 0x20:
+            print "[0x20 = 1]",
+        else:
+            print "[0x20 = 0]",
+        if data & 0x10:
+            print "[0x10 = 1]",
+        else:
+            print "[0x10 = 0]",
+        if data & 0x08:
+            print "[0x08 = 1]",
+        else:
+            print "[0x08 = 0]",
+        if data & 0x04:
+            print "[0x04 = 1]",
+        else:
+            print "[0x04 = 0]",
+        if data & 0x02:
+            print "[0x02 = 1]",
+        else:
+            print "[0x02 = 0]",
+        if data & 0x01:
+            print "[INOK Active High    ]",
+        else:
+            print "[INOK not Active High]",
+        print
+        return
+
+    def dump_command(self, data):
+        if data & 0x80: # ENABLE_WRT_ACCESS
+            print "[WRT Access Enabled ]",
+        else:
+            print "[WRT Access Disabled]",
+        if data & 0x40:
+            print "[0x40 = 1]",
+        else:
+            print "[0x40 = 0]",
+        if data & 0x20:
+            print "[0x20 = 1]",
+        else:
+            print "[0x20 = 0]",
+        if data & 0x10:
+            print "[OTG Enabled ]",
+        else:
+            print "[OTG Disabled]",
+        if data & 0x08:
+            print "[0x08 = 1]",
+        else:
+            print "[0x08 = 0]",
+        if data & 0x04:
+            print "[0x04 = 1]",
+        else:
+            print "[0x04 = 0]",
+        if data & 0x02:
+            print "[Charge Enabled ]",
+        else:
+            print "[Charge Disabled]",
+        if data & 0x01:
+            print "[0x01 = 1]",
+        else:
+            print "[0x01 = 0]",
+        print
+        return
+
+    def finish_register_access(self, deltatime, rw, data):
+        if rw == "Read":
+            rwtext = "(R)"
+        else:
+            rwtext = "(W)"
+        print "smb347 : %s %s, data = 0x%0.2x" % (self.regname.ljust(12), rwtext,data),
+        if self.temp_register == 0x30: # CMD_REG
+            self.dump_command(data)
+        elif self.temp_register == 0x08: # SYSOK_USB3
+            self.dump_usb3(data)
+        else:
+            print
+
+        self.in_reg_transaction = False
+        return
+    
+    def process_transaction(self, deltatime, rw, data):
+        if self.in_reg_transaction:
+            self.finish_register_access(deltatime, rw, data)
+        elif data in self.smb347_regs:
+            # This is the first half of a register access
+            self.regname = self.smb347_regs[data]
+            self.in_reg_transaction = True
+            #print "%s:" % self.regname,
+            self.temp_register = data
+        else:
+            print "smb347: Unknown register address %d, skipping" % data
