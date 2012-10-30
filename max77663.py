@@ -20,6 +20,37 @@ class MAX77663:
         0x10:'MAX77663_REG_LDOX_IRQ_MASK',
         0x11:'MAX77663_REG_LDO8_IRQ_MASK',
         0x12:'MAX77663_REG_ONOFF_IRQ_MASK',
+        0x16:'MAX77663_REG_SD0', #', #0x16
+        0x17:'MAX77663_REG_SD1', #', #0x17
+        0x18:'MAX77663_REG_SD2', #', #0x18
+        0x19:'MAX77663_REG_SD3', #', #0x19
+        0x1A:'MAX77663_REG_SD4', #', #0x1A
+        0x1B:'MAX77663_REG_DVSSD0', #', #0x1B
+        0x1C:'MAX77663_REG_DVSSD1', #', #0x1C
+        0x1D:'MAX77663_REG_SD0_CFG', #', #0x1D
+        0x1E:'MAX77663_REG_SD1_CFG', #', #0x1E
+        0x1F:'MAX77663_REG_SD2_CFG', #', #0x1F
+        0x20:'MAX77663_REG_SD3_CFG', #', #0x20
+        0x21:'MAX77663_REG_SD4_CFG', #', #0x21
+        0x23:'MAX77663_REG_LDO0_CFG', #', #0x23
+        0x24:'MAX77663_REG_LDO0_CFG2', #', #0x24
+        0x25:'MAX77663_REG_LDO1_CFG', #', #0x25
+        0x26:'MAX77663_REG_LDO1_CFG2', #', #0x26
+        0x27:'MAX77663_REG_LDO2_CFG', #', #0x27
+        0x28:'MAX77663_REG_LDO2_CFG2', #', #0x28
+        0x29:'MAX77663_REG_LDO3_CFG', #', #0x29
+        0x2A:'MAX77663_REG_LDO3_CFG2', #', #0x2A
+        0x2B:'MAX77663_REG_LDO4_CFG', #', #0x2B
+        0x2C:'MAX77663_REG_LDO4_CFG2', #', #0x2C
+        0x2D:'MAX77663_REG_LDO5_CFG', #', #0x2D
+        0x2E:'MAX77663_REG_LDO5_CFG2', #', #0x2E
+        0x2F:'MAX77663_REG_LDO6_CFG', #', #0x2F
+        0x30:'MAX77663_REG_LDO6_CFG2', #', #0x30
+        0x31:'MAX77663_REG_LDO7_CFG', #', #0x31
+        0x32:'MAX77663_REG_LDO7_CFG2', #', #0x32
+        0x33:'MAX77663_REG_LDO8_CFG', #', #0x33
+        0x34:'MAX77663_REG_LDO8_CFG2', #', #0x34
+        0x35:'MAX77663_REG_LDO_CFG3', #', #0x35
         0x36:'MAX77663_REG_GPIO_CTRL0',
         0x37:'MAX77663_REG_GPIO_CTRL1',
         0x38:'MAX77663_REG_GPIO_CTRL2',
@@ -36,6 +67,8 @@ class MAX77663:
         0x5C:'MAX77663_REG_CHIP_IDENT4',
 }
 
+
+
 # ================================================
 
     in_reg_transaction = False
@@ -44,6 +77,8 @@ class MAX77663:
 
 
     def dump_generic(self, data):
+        print "0x%0.2x" % data
+        return
         if data & 0x80:
             print "[0x80 = 1]",
         else:

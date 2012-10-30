@@ -26,8 +26,10 @@ i2caddrs = {
 RELATED_DELTA = .0005
    
 #skiplist = ['rt5640', 'max77663']
-#skiplist = ['rt5640','unknown 1','bq27541','smb347','max77663','at24','dummy','notinkernel1','notinkernel2', 'nct1008']
-skiplist = ['rt5640','unknown 1','bq27541','smb347','at24','dummy','notinkernel1','notinkernel2', 'nct1008']
+skiplist = ['rt5640','unknown 1','bq27541','max77663','at24','dummy','notinkernel1','notinkernel2', 'nct1008']
+#allskiplist = ['rt5640','unknown 1','bq27541','smb347','max77663','at24','dummy','notinkernel1','notinkernel2', 'nct1008']
+#skiplist = ['rt5640','unknown 1','bq27541','smb347','max77663','at24','dummy', 'nct1008']
+#skiplist = ['rt5640','unknown 1','bq27541','smb347','at24','dummy','notinkernel1','notinkernel2', 'nct1008']
 #skiplist = ['rt5640','unknown 1','max77663','at24','dummy','notinkernel1','notinkernel2']
 
 if len(sys.argv) != 2:
@@ -100,9 +102,13 @@ for line in fileinput.input(sys.argv[1]):
         bq.process_transaction(deltatime, rw, data)
     elif devname is 'smb347':
         smb.process_transaction(deltatime, rw, data)
+    #elif devname is 'notinkernel1':
+    #    print line
+    #    print "devname =", devname
+    #    print "i2caddr = 0x%0.2x " % i2caddr
     elif devname is 'nct1008':
         nct.process_transaction(deltatime, rw, data)
     elif devname is 'max77663':
         max.process_transaction(deltatime, rw, data)
     else: # unknown device
-        print "%f device = %s (%s) %x" % (timestamp, devname, rw, data)
+        print "%f device = %s (%s) %x [%s]" % (timestamp, devname, rw, data, acknak)
