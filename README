@@ -1,0 +1,8 @@
+This is a set of python scripts which help decode I2C traffic on bus4 on the Nexus 7 platform.
+
+The input for the scripts are a .csv file which has been exported from the logic anaylzer. The logic analyzer used is:
+
+Salaea Logic: http://www.saleae.com/logic
+
+There is a sample file supplied, fullcycle.csv - This file is a capture of boot, plugging in the charger, unplugging the charger, and shutdown. These were all captured while running Android.
+
