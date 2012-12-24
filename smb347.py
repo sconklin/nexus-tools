@@ -87,19 +87,22 @@ class SMB347:
     regname = None
 
     def dump(self, data, labels):
-        data &= 0xFF
+        """ Print list of bit masks and their values in data byte.
+            If bitmask in dictionary labels, substitute labels[bitmask] for bitmask,
+            and display enable status.
+            Label INOK uses a special value display."""
         mask = 0x80
         while mask > 0:
             bitval = bool(data & mask)
-            if mask in labels:
-                label = labels[mask]
+            label = labels.get(mask)
+            if not label:
+                print '[%#4.2x = %d]' % (mask, bitval),
+            else:
                 if label == 'INOK':
                     values = ['not Active High', 'Active High    ']
                 else:
                     values = ['Disabled', 'Enabled ']
                 print '[%s %s]' % (label, values[bitval]),
-            else:
-                print '[%#4.2x = %d]' % (mask, bitval),
             mask >>= 1
         print
         return
