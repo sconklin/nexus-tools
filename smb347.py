@@ -87,38 +87,11 @@ class SMB347:
     regname = None
 
     def dump_generic(self, data):
-        if data & 0x80:
-            print "[0x80 = 1]",
-        else:
-            print "[0x80 = 0]",
-        if data & 0x40:
-            print "[0x40 = 1]",
-        else:
-            print "[0x40 = 0]",
-        if data & 0x20:
-            print "[0x20 = 1]",
-        else:
-            print "[0x20 = 0]",
-        if data & 0x10:
-            print "[0x10 = 1]",
-        else:
-            print "[0x10 = 0]",
-        if data & 0x08:
-            print "[0x08 = 1]",
-        else:
-            print "[0x08 = 0]",
-        if data & 0x04:
-            print "[0x04 = 1]",
-        else:
-            print "[0x04 = 0]",
-        if data & 0x02:
-            print "[0x02 = 1]",
-        else:
-            print "[0x02 = 0]",
-        if data & 0x01:
-            print "[0x01 = 1]",
-        else:
-            print "[0x01 = 0]",
+        data &= 0xFF
+        mask = 0x80
+        while mask > 0:
+            print '[%#4.2x = %d]' % (mask, bool(data & mask)),
+            mask >>= 1
         print
         return
 
