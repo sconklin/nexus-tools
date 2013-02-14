@@ -86,113 +86,35 @@ class SMB347:
     temp_register = None
     regname = None
 
-    def dump_generic(self, data):
-        if data & 0x80:
-            print "[0x80 = 1]",
-        else:
-            print "[0x80 = 0]",
-        if data & 0x40:
-            print "[0x40 = 1]",
-        else:
-            print "[0x40 = 0]",
-        if data & 0x20:
-            print "[0x20 = 1]",
-        else:
-            print "[0x20 = 0]",
-        if data & 0x10:
-            print "[0x10 = 1]",
-        else:
-            print "[0x10 = 0]",
-        if data & 0x08:
-            print "[0x08 = 1]",
-        else:
-            print "[0x08 = 0]",
-        if data & 0x04:
-            print "[0x04 = 1]",
-        else:
-            print "[0x04 = 0]",
-        if data & 0x02:
-            print "[0x02 = 1]",
-        else:
-            print "[0x02 = 0]",
-        if data & 0x01:
-            print "[0x01 = 1]",
-        else:
-            print "[0x01 = 0]",
+    def dump(self, data, labels):
+        """ Print list of bit masks and their values in data byte.
+            If bitmask in dictionary labels, substitute labels[bitmask] for bitmask,
+            and display enable status.
+            Label INOK uses a special value display."""
+        mask = 0x80
+        while mask > 0:
+            bitval = bool(data & mask)
+            label = labels.get(mask)
+            if not label:
+                print '[%#4.2x = %d]' % (mask, bitval),
+            else:
+                if label == 'INOK':
+                    values = ['not Active High', 'Active High    ']
+                else:
+                    values = ['Disabled', 'Enabled ']
+                print '[%s %s]' % (label, values[bitval]),
+            mask >>= 1
         print
         return
+
+    def dump_generic(self, data):
+        self.dump(data, {})
 
     def dump_usb3(self, data):
-        if data & 0x80:
-            print "[0x80 = 1]",
-        else:
-            print "[0x80 = 0]",
-        if data & 0x40:
-            print "[0x40 = 1]",
-        else:
-            print "[0x40 = 0]",
-        if data & 0x20:
-            print "[0x20 = 1]",
-        else:
-            print "[0x20 = 0]",
-        if data & 0x10:
-            print "[0x10 = 1]",
-        else:
-            print "[0x10 = 0]",
-        if data & 0x08:
-            print "[0x08 = 1]",
-        else:
-            print "[0x08 = 0]",
-        if data & 0x04:
-            print "[0x04 = 1]",
-        else:
-            print "[0x04 = 0]",
-        if data & 0x02:
-            print "[0x02 = 1]",
-        else:
-            print "[0x02 = 0]",
-        if data & 0x01:
-            print "[INOK Active High    ]",
-        else:
-            print "[INOK not Active High]",
-        print
-        return
+        self.dump(data, {0x01: 'INOK'})
 
     def dump_command(self, data):
-        if data & 0x80: # ENABLE_WRT_ACCESS
-            print "[WRT Access Enabled ]",
-        else:
-            print "[WRT Access Disabled]",
-        if data & 0x40:
-            print "[0x40 = 1]",
-        else:
-            print "[0x40 = 0]",
-        if data & 0x20:
-            print "[0x20 = 1]",
-        else:
-            print "[0x20 = 0]",
-        if data & 0x10:
-            print "[OTG Enabled ]",
-        else:
-            print "[OTG Disabled]",
-        if data & 0x08:
-            print "[0x08 = 1]",
-        else:
-            print "[0x08 = 0]",
-        if data & 0x04:
-            print "[0x04 = 1]",
-        else:
-            print "[0x04 = 0]",
-        if data & 0x02:
-            print "[Charge Enabled ]",
-        else:
-            print "[Charge Disabled]",
-        if data & 0x01:
-            print "[0x01 = 1]",
-        else:
-            print "[0x01 = 0]",
-        print
-        return
+        self.dump(data, {0x80: 'WRT Access', 0x10: 'OTG', 0x02: 'Charge'})
 
     def finish_register_access(self, deltatime, rw, data):
         if rw == "Read":
